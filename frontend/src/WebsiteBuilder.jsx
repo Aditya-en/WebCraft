@@ -177,6 +177,19 @@ const WebsiteBuilder = () => {
                 </CardContent>
               </Card>
             ))} */}
+            {Object.keys(componentTemplates).map((type) => (
+              <div
+                key={type}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("componentType", type);
+                }}
+                className="cursor-move hover:border-blue-500 p-3 border rounded-md flex items-center space-x-2"
+              >
+                <GripVertical className="h-4 w-4" />
+                <span className="capitalize">{type}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -211,7 +224,18 @@ const WebsiteBuilder = () => {
               </div>
             ) : (
               components.map((component) => (
-                <ComponentPreview key={component.id} component={component} />
+                <ComponentPreview
+                  key={component.id}
+                  component={component}
+                  selectedComponent={selectedComponent}
+                  setSelectedComponent={setSelectedComponent}
+                  isDragging={isDragging}
+                  editingId={editingId}
+                  setEditingId={setEditingId}
+                  handleDragEnd={handleDragEnd}
+                  handleDragStart={handleDragStart}
+                  handleContentEdit={handleContentEdit}
+                />
               ))
             )}
           </div>

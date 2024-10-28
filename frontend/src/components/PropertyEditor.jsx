@@ -40,7 +40,10 @@ const PropertyEditor = ({ component, onUpdate }) => {
   };
 
   return (
-    <div className="p-4" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="p-4 h-5/6 overflow-y-scroll"
+      onClick={(e) => e.stopPropagation()}
+    >
       <h3 className="font-semibold mb-4 text-sm">Edit {component.type}</h3>
 
       {(component.type === "text" || component.type === "button") && (

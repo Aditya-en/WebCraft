@@ -1,9 +1,19 @@
-const ComponentPreview = ({ component }) => {
+const ComponentPreview = ({
+  component,
+  selectedComponent,
+  setSelectedComponent,
+  isDragging,
+  editingId,
+  setEditingId,
+  handleDragEnd,
+  handleDragStart,
+  handleContentEdit,
+}) => {
   const style = {
     ...component.styles,
     cursor: isDragging ? "grabbing" : "grab",
     outline:
-      selectedComponent?.id === component.id ? "2px solid #007bff" : "none",
+      selectedComponent?.id === component.id ? "1px solid #007bff" : "none",
     userSelect: "none",
   };
 
