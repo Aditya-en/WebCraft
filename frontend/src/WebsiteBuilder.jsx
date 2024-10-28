@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { GripVertical, Layout, Image, Type, Box, Eye } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-
+// import { Card, CardContent } from "@/components/ui/card";
+import ComponentPreview from "./components/ComponentPreview";
+import PropertyEditor from "./components/PropertyEditor";
 const componentTemplates = {
   section: {
     defaultStyles: {
@@ -140,188 +141,12 @@ const WebsiteBuilder = () => {
     setIsDragging(false);
   };
 
-  const ComponentPreview = ({ component }) => {
-    const style = {
-      ...component.styles,
-      cursor: isDragging ? "grabbing" : "grab",
-      outline:
-        selectedComponent?.id === component.id ? "2px solid #007bff" : "none",
-      userSelect: "none",
-    };
-
-    const handleClick = (e) => {
-      e.stopPropagation();
-      setSelectedComponent(component);
-    };
-
-    const handleDoubleClick = (e) => {
-      e.stopPropagation();
-      setEditingId(component.id);
-    };
-
-    const isEditing = editingId === component.id;
-
-    const commonProps = {
-      style,
-      onClick: handleClick,
-      draggable: !isEditing,
-      onDragStart: (e) => handleDragStart(e, component),
-      onDragEnd: handleDragEnd,
-      className: "relative group",
-    };
-
-    switch (component.type) {
-      case "section":
-        return (
-          <div {...commonProps}>
-            <div className="absolute -top-3 left-2 bg-blue-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100">
-              Section
-            </div>
-            {component.children.map((child) => (
-              <ComponentPreview key={child.id} component={child} />
-            ))}
-          </div>
-        );
-
-      case "text":
-        return isEditing ? (
-          <input
-            {...commonProps}
-            type="text"
-            value={component.content}
-            onChange={(e) => handleContentEdit(component, e.target.value)}
-            onBlur={() => setEditingId(null)}
-            autoFocus
-            className="p-2 border rounded"
-            draggable={false}
-          />
-        ) : (
-          <p {...commonProps} onDoubleClick={handleDoubleClick}>
-            {component.content}
-          </p>
-        );
-
-      case "image":
-        return (
-          <div {...commonProps}>
-            <img
-              src="/api/placeholder/400/300"
-              alt="placeholder"
-              className="w-full"
-              draggable={false}
-            />
-          </div>
-        );
-
-      case "button":
-        return isEditing ? (
-          <input
-            {...commonProps}
-            type="text"
-            value={component.content}
-            onChange={(e) => handleContentEdit(component, e.target.value)}
-            onBlur={() => setEditingId(null)}
-            autoFocus
-            className="p-2 border rounded"
-            draggable={false}
-          />
-        ) : (
-          <button {...commonProps} onDoubleClick={handleDoubleClick}>
-            {component.content}
-          </button>
-        );
-
-      default:
-        return null;
-    }
-  };
-
   const handleContentEdit = (component, newContent) => {
     const newComponents = components.map((c) =>
       c.id === component.id ? { ...c, content: newContent } : c
     );
     setComponents(newComponents);
     setSelectedComponent(newComponents.find((c) => c.id === component.id));
-  };
-
-  const PropertyEditor = ({ component, onUpdate }) => {
-    const [activeField, setActiveField] = useState(null);
-    const inputRefs = useRef({});
-
-    if (!component)
-      return (
-        <div className="p-4 text-gray-500 text-sm">
-          Select an element to edit its properties
-        </div>
-      );
-
-    const updateStyle = (property, value) => {
-      const updatedComponent = {
-        ...component,
-        styles: {
-          ...component.styles,
-          [property]: value,
-        },
-      };
-      onUpdate(updatedComponent);
-      if (activeField) {
-        setTimeout(() => {
-          inputRefs.current[activeField]?.focus();
-        }, 0);
-      }
-    };
-
-    const updateContent = (value) => {
-      const updatedComponent = {
-        ...component,
-        content: value,
-      };
-      onUpdate(updatedComponent);
-      if (activeField) {
-        setTimeout(() => {
-          inputRefs.current[activeField]?.focus();
-        }, 0);
-      }
-    };
-
-    return (
-      <div className="p-4" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-semibold mb-4 text-sm">Edit {component.type}</h3>
-
-        {(component.type === "text" || component.type === "button") && (
-          <div className="mb-4">
-            <label className="block text-sm mb-1">Content</label>
-            <input
-              ref={(el) => (inputRefs.current["content"] = el)}
-              type="text"
-              value={component.content}
-              onChange={(e) => updateContent(e.target.value)}
-              onFocus={() => setActiveField("content")}
-              onBlur={() => setActiveField(null)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-        )}
-
-        <h4 className="font-medium text-sm mb-2">Styles</h4>
-        {Object.entries(component.styles).map(([property, value]) => (
-          <div key={property} className="mb-3">
-            <label className="block text-sm mb-1">
-              {property.charAt(0).toUpperCase() + property.slice(1)}
-            </label>
-            <input
-              ref={(el) => (inputRefs.current[property] = el)}
-              type="text"
-              value={value}
-              onChange={(e) => updateStyle(property, e.target.value)}
-              onFocus={() => setActiveField(property)}
-              onBlur={() => setActiveField(null)}
-              className="w-full p-2 border rounded text-sm"
-            />
-          </div>
-        ))}
-      </div>
-    );
   };
 
   const handleCanvasClick = (e) => {
@@ -337,7 +162,7 @@ const WebsiteBuilder = () => {
         <div className="p-4">
           <h2 className="font-semibold mb-4">Components</h2>
           <div className="space-y-3">
-            {Object.keys(componentTemplates).map((type) => (
+            {/* {Object.keys(componentTemplates).map((type) => (
               <Card
                 key={type}
                 draggable
@@ -351,7 +176,7 @@ const WebsiteBuilder = () => {
                   <span className="capitalize">{type}</span>
                 </CardContent>
               </Card>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
