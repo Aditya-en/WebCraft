@@ -2,19 +2,25 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = ({setisloggedin,setEmail}) => {
 
 
-    const [email, setEmail] = useState('');
+    const [localEmail, setlocalEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const formdata={
+      email:localEmail,password:password,confirmPassword:confirmPassword
+    }
+
     const navigate = useNavigate();
   
     const handleSignup = (e) => {
       e.preventDefault();
+      setEmail(localEmail)
+      console.log(formdata);
       // Add signup logic here
-      // After successful signup:
-      // navigate('/dashboard');
+      
+      navigate('/login');
     };
 
     
@@ -35,8 +41,8 @@ const Signup = () => {
               <input
                 type="email"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={localEmail}
+                onChange={(e) => setlocalEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
                 placeholder="Enter your email"
                 required

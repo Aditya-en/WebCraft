@@ -2,19 +2,25 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Dashboard from './Dashboard';
 
-const Login = () => {
+
+const Login = ({setisloggedin,setEmail}) => {
 
 
-    const [email, setEmail] = useState('');
+    // const [email, setEmail] = useState('');
+    const [localEmail, setlocalEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
   
     const handleLogin = (e) => {
       e.preventDefault();
       // Add login logic here
-      // After successful login:
-      // navigate('/dashboard');
+      setEmail(localEmail)
+      setisloggedin(true);
+      // toast.success("Logged in");
+      
+      navigate('/dashboard');
     };
   return (
     
@@ -33,8 +39,8 @@ const Login = () => {
               <input
                 type="email"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={localEmail}
+                onChange={(e) => setlocalEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
                 placeholder="Enter your email"
                 required
